@@ -1,0 +1,11 @@
+app:
+    path: /
+    defaults:
+        _controller: FrameworkBundle:Redirect:redirect
+        route:       get_podcasts
+        permanent:   true
+
+podcasts:
+    type:     rest
+    resource: App\Controller\PodcastController
+    prefix:   /api

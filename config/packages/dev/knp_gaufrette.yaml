@@ -1,0 +1,11 @@
+knp_gaufrette:
+    adapters:
+        podcasts:
+            aws_s3:
+                service_id: awsS3
+                bucket_name: 'guizm0b'
+                detect_content_type: true
+    filesystems:
+        podcasts:
+            adapter: podcasts
+            alias: podcasts_filesystem
