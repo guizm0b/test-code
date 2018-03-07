@@ -31,6 +31,10 @@ services:
         arguments:
             $baseUrl: '%env(BASE_URL)%'
 
+    App\Transformer\PodcastTransformer:
+        arguments:
+            $bucketBaseUrl: '%env(BUCKET_BASE_URL)%'
+
     Aws\S3\S3Client:
         arguments:
             -

@@ -3,7 +3,7 @@
 namespace App\Serializer;
 
 use App\Entity\Podcast;
-use App\Transformers\PodcastTransformer;
+use App\Transformer\PodcastTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;

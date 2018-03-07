@@ -1,12 +1,25 @@
 <?php
 
-namespace App\Transformers;
+namespace App\Transformer;
 
 use App\Entity\Podcast;
 use League\Fractal\TransformerAbstract;
 
 class PodcastTransformer extends TransformerAbstract
 {
+    /**
+     * @var string
+     */
+    protected $bucketBaseUrl;
+
+    /**
+     * @param string $bucketBaseUrl
+     */
+    public function __construct($bucketBaseUrl)
+    {
+        $this->bucketBaseUrl = $bucketBaseUrl;
+    }
+
     /**
      * @param Podcast $podcast
      */
@@ -18,7 +31,7 @@ class PodcastTransformer extends TransformerAbstract
             'description' => $podcast->getDescription(),
             'episode_number' => (int) $podcast->getEpisodeNumber(),
             'publish_date' => $podcast->getPublishDate(),
-            'filename' => $podcast->getFilename(),
+            'url' => $this->bucketBaseUrl . $podcast->getFilename(),
         ];
     }
 }
