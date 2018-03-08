@@ -10,3 +10,4 @@
 * API authentification (HWIOAuthBundle)
 * API versioning (FosRestBundle)
 * API documentation (NelmioApiDocBundle)
+* Add some tests
