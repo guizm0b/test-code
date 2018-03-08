@@ -6,6 +6,7 @@ use App\Entity\Podcast;
 use App\Form\PodcastType;
 use App\Serializer\PodcastSerializer;
 use App\Uploader\PodcastUploader;
+use App\Helper\ValidationHelper;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
@@ -34,13 +35,22 @@ class PodcastController extends FOSRestController implements ClassResourceInterf
     protected $validator;
 
     /**
-     * @param PodcastSerializer $serializer
+     * @var ValidationHelper
      */
-    public function __construct(PodcastSerializer $serializer, PodcastUploader $uploader, ValidatorInterface $validator)
+    protected $validationHelper;
+
+    /**
+     * @param PodcastSerializer $serializer
+     * @param PodcastUploader $uploader
+     * @param ValidatorInterface $validator
+     * @param ValidationHelper $validationHelper
+     */
+    public function __construct(PodcastSerializer $serializer, PodcastUploader $uploader, ValidatorInterface $validator, ValidationHelper $validationHelper)
     {
         $this->serializer = $serializer;
         $this->uploader = $uploader;
         $this->validator = $validator;
+        $this->validationHelper = $validationHelper;
     }
 
     /**
@@ -57,12 +67,17 @@ class PodcastController extends FOSRestController implements ClassResourceInterf
         return new Response($serializedData);
     }
 
+    /**
+     * @param Request $request
+     */
     public function cpostAction(Request $request)
     {
         $data = $request->request->all();
         $file = $request->files->all();
 
         $podcast = new Podcast();
+
+        // The form is used to bind the data to the entity
         $form = $this->createForm(PodcastType::class, $podcast);
 
         $form->submit($data);
@@ -75,12 +90,17 @@ class PodcastController extends FOSRestController implements ClassResourceInterf
         $errors = $this->validator->validate($podcast);
 
         if (count($errors) > 0) {
-            // @TODO Return actual errors
-            throw new \InvalidArgumentException('The Podcast contains errors');
+            $errorMessages = $this->validationHelper->formatErrors($errors);
+            
+            return $errorMessages;
         } else {
-            // @TODO
-            // If working with a DB, store the Podcast
-            // Because it's a test, we just return the Podcast
+            // @TODO Store the podcast
+            // For the test, I'm not working with a DB
+
+            // $em = $this->getDoctrine()->getManager();
+            //
+            // $em->persist($podcast);
+            // $em->flush();
 
             $serializedData = $this->serializer->serialize($podcast);
 
